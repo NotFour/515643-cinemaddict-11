@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Роман Бляхарский](https://up.htmlacademy.ru/ecmascript/11/user/515643).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Рыжаков](https://up.htmlacademy.ru/ecmascript/11/user/201015).
 
 ---
 
