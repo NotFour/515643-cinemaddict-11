@@ -1,4 +1,4 @@
-import {getRandomNumber, render, RenderPosition} from "./utils";
+import {getRandomNumber, isEscEvent, render, RenderPosition} from "./utils";
 import UserLevel from "./components/userLevel";
 import MainMenu from "./components/mainMenu";
 import FilmContainer from "./components/filmContainer";
@@ -125,7 +125,7 @@ const createMocks = (count) => {
   return result;
 };
 
-const mocks = createMocks(20);
+let mocks = createMocks(20);
 
 const createFiltersObject = () => {
   let watchlist = 0; let history = 0; let favorites = 0;
@@ -152,15 +152,15 @@ render(header, userLevelComponent.getElement(), RenderPosition.BEFOREEND);
 const mainContainer = document.querySelector(`.main`);
 const mainMenuComponent = new MainMenu(filters);
 const sortMenuComponent = new SortMenu();
-const filmContainerComponent = new FilmContainer();
+const filmContainerComponent = new FilmContainer(mocks);
 
 render(mainContainer, mainMenuComponent.getElement(), RenderPosition.BEFOREEND);
 render(mainContainer, sortMenuComponent.getElement(), RenderPosition.BEFOREEND);
 render(mainContainer, filmContainerComponent.getElement(), RenderPosition.BEFOREEND);
 
-let filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
+const filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
 let filmsShowed = 0;
-let renderedFilms = [];
+const renderedFilms = [];
 
 const findFilmObject = (films, filter, element) => {
   return films.find((film) => {
@@ -168,16 +168,22 @@ const findFilmObject = (films, filter, element) => {
   });
 };
 
+const onPopupCloseKey = (evt) => {
+  isEscEvent(evt, closePopup);
+};
+
 const showPopup = (evt) => {
   if ([`film-card__title`, `film-card__poster`, `film-card__comments`].indexOf(evt.target.classList[0]) !== -1) {
     const currentPopup = findFilmObject(renderedFilms, `card`, evt.target.parentElement).popup.getElement();
     document.body.appendChild(currentPopup);
+    document.addEventListener(`keydown`, onPopupCloseKey);
   }
 };
 
 const closePopup = () => {
   const currentPopup = findFilmObject(renderedFilms, `popup`, document.querySelector(`.film-details`)).popup.getElement();
   document.body.removeChild(currentPopup);
+  document.removeEventListener(`keydown`, onPopupCloseKey);
 };
 
 const onCardClick = (evt) => {
@@ -201,34 +207,38 @@ const createFilm = (index) => {
   render(filmsListContainer, currentCard.getElement(), RenderPosition.BEFOREEND);
 };
 
-for (filmsShowed; filmsShowed < 5; filmsShowed++) {
+for (filmsShowed; filmsShowed < 5 && filmsShowed < mocks.length; filmsShowed++) {
   createFilm(filmsShowed);
 }
 
 const filmsList = document.querySelector(`.films .films-list`);
-const showMoreComponent = new ShowMore();
-render(filmsList, showMoreComponent.getElement(), RenderPosition.BEFOREEND);
+
+if (mocks.length) {
+  const showMoreComponent = new ShowMore();
+  render(filmsList, showMoreComponent.getElement(), RenderPosition.BEFOREEND);
+
+  const showMoreBtn = document.querySelector(`.films-list__show-more`);
+
+  const showMore = () => {
+    for (filmsShowed; filmsShowed < filmsShowedLater + 5 && filmsShowed < mocks.length; filmsShowed++) {
+      createFilm(filmsShowed);
+    }
+
+    filmsShowedLater = filmsShowed;
+
+    if (filmsShowed === mocks.length) {
+      showMoreBtn.removeEventListener(`click`, showMore);
+      showMoreBtn.classList.add(`visually-hidden`);
+    }
+  };
+
+  showMoreBtn.addEventListener(`click`, showMore);
+}
 
 const footerStatistic = document.querySelector(`.footer__statistics`);
-const filmsStatisticComponent = new FilmsStatistic(`130 291`);
+const filmsStatisticComponent = new FilmsStatistic(mocks.length);
 render(footerStatistic, filmsStatisticComponent.getElement(), RenderPosition.BEFOREEND);
 
 let filmsShowedLater = filmsShowed;
 
-filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
-const showMoreBtn = document.querySelector(`.films-list__show-more`);
 
-const showMore = () => {
-  for (filmsShowed; filmsShowed < filmsShowedLater + 5 && filmsShowed < mocks.length; filmsShowed++) {
-    createFilm(filmsShowed);
-  }
-
-  filmsShowedLater = filmsShowed;
-
-  if (filmsShowed === mocks.length) {
-    showMoreBtn.removeEventListener(`click`, showMore);
-    showMoreBtn.classList.add(`visually-hidden`);
-  }
-};
-
-showMoreBtn.addEventListener(`click`, showMore);
