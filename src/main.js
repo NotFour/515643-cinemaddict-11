@@ -213,8 +213,6 @@ const footerStatistic = document.querySelector(`.footer__statistics`);
 const filmsStatisticComponent = new FilmsStatistic(`130 291`);
 render(footerStatistic, filmsStatisticComponent.getElement(), RenderPosition.BEFOREEND);
 
-// render(document.body, FilmPopupComponent.getElement(), RenderPosition.BEFOREEND);
-
 let filmsShowedLater = filmsShowed;
 
 filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
