@@ -1,14 +1,16 @@
 import {createElement} from "../utils";
 
-const createFilmContainerTemplate = () => {
+const createFilmContainerTemplate = (films) => {
+  const isSomeFilms = !!films.length;
+  const filmListTitleVisible = isSomeFilms ? `visually-hidden` : ``;
+  const filmsTitle = isSomeFilms ? `All movies. Upcoming` : `There are no movies in our database`;
+  const filmsContainer = isSomeFilms ? `<div class="films-list__container"></div>` : ``;
+
   return `
     <section class="films">
       <section class="films-list">
-        <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-        <div class="films-list__container">
-
-        </div>
+        <h2 class="films-list__title ${filmListTitleVisible}">${filmsTitle}</h2>
+        ${filmsContainer}
       </section>
     </section>
   `;
@@ -16,8 +18,14 @@ const createFilmContainerTemplate = () => {
 
 
 export default class FilmContainer {
+  constructor(films) {
+    this._films = films;
+
+    this._element = null;
+  }
+
   getTemplate() {
-    return createFilmContainerTemplate();
+    return createFilmContainerTemplate(this._films);
   }
 
   getElement() {

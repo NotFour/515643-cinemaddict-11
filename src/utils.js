@@ -1,6 +1,10 @@
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+};
+
+export const KeyCode = {
+  ESC: 27
 };
 
 export const getRandomNumber = (min, max) => {
@@ -24,5 +28,11 @@ export const render = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+  }
+};
+
+export const isEscEvent = (evt, action) => {
+  if (evt.keyCode === KeyCode.ESC) {
+    action();
   }
 };
