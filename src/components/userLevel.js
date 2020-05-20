@@ -1,4 +1,6 @@
-const getUserLevel = function () {
+import {createElement} from "../utils";
+
+const createUserLevelTemplate = () => {
   return `
     <section class="header__profile profile">
       <p class="profile__rating">Sci-Fighter</p>
@@ -7,4 +9,21 @@ const getUserLevel = function () {
   `;
 };
 
-export {getUserLevel};
+
+export default class UserLevel {
+  getTemplate() {
+    return createUserLevelTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

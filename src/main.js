@@ -1,23 +1,15 @@
-import {getUserLevel} from './components/userLevel.js';
-import {getMainMenu} from './components/mainMenu.js';
-import {getSortMenu} from './components/sortMenu.js';
-import {getFilmContainer} from './components/filmContainer.js';
-import {getFilmCard} from './components/filmCard.js';
-import {getShowMore} from './components/showMore.js';
-import {getFilmsStatistic} from './components/filmStat.js';
-import {getFilmPopup} from './components/filmPopup.js';
+import {getRandomNumber, render, RenderPosition} from "./utils";
+import UserLevel from "./components/userLevel";
+import MainMenu from "./components/mainMenu";
+import FilmContainer from "./components/filmContainer";
+import SortMenu from "./components/sortMenu";
+import FilmCard from "./components/filmCard";
+import ShowMore from "./components/showMore";
+import FilmsStatistic from "./components/filmStat";
+import FilmPopup from "./components/filmPopup";
 
-const renderComponent = function (template, element) {
-  template.innerHTML += element;
-};
 
-function getRandomNumber(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const getRandomElems = function (mass, count = 1) {
+const getRandomElems = (mass, count = 1) => {
   const iterator = (typeof count === `number`) ? count : getRandomNumber(...count);
 
   const result = [];
@@ -30,49 +22,54 @@ const getRandomElems = function (mass, count = 1) {
   return result;
 };
 
-const createFilmObject = function () {
+const createFilmObject = () => {
   const posters = [`made-for-each-other.png`, `popeye-meets-sinbad.png`, `sagebrush-trail.jpg`,
     `santa-claus-conquers-the-martians.jpg`, `the-dance-of-life.jpg`, `the-great-flamarion.jpg`, `the-man-with-the-golden-arm.jpg`];
+  const filmTitles = [`Один дома`, `Друзья`, `Как я встретил вашу маму`, `Теория большого взрыва`, `Мальчишник в Вегасе`, `Виноваты звезды`, `Если я останусь`, `Звездные войны`, `Стыд`, `Чудотворцы`, `Несгибаемая Кимми Шмидт`, `Кот в сапогах`];
   const labels = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(/\.{1} /).map((sentense) => {
     return `${sentense}. `;
   });
   const emotions = [`smile`, `sleeping`, `puke`, `angry`];
   const filmDuration = getRandomNumber(60, 180);
 
+  const filmTitle = getRandomElems(filmTitles);
+  const months = [`january`, `february`, `march`, `april`, `may`, `june`, `july`, `august`, `september`, `october`, `november`, `december`];
+  const filmYear = getRandomNumber(1997, 2018);
+
   const comments = [
     {
       id: `42`,
       author: `Ilya O'Reilly`,
-      comment: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
-      date: `2019/12/31 23:59`,
+      text: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
+      date: `2020/${getRandomNumber(1, 12)}/${getRandomNumber(1, 28)} ${getRandomNumber(0, 23)}:${getRandomNumber(0, 59)}`,
       emotion: getRandomElems(emotions)
     },
     {
       id: `42`,
       author: `Ilya O'Reilly`,
-      comment: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
-      date: `2019/12/31 23:59`,
+      text: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
+      date: `2020/${getRandomNumber(1, 12)}/${getRandomNumber(1, 28)} ${getRandomNumber(0, 23)}:${getRandomNumber(0, 59)}`,
       emotion: getRandomElems(emotions)
     },
     {
       id: `42`,
       author: `Ilya O'Reilly`,
-      comment: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
-      date: `2019/12/31 23:59`,
+      text: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
+      date: `2020/${getRandomNumber(1, 12)}/${getRandomNumber(1, 28)} ${getRandomNumber(0, 23)}:${getRandomNumber(0, 59)}`,
       emotion: getRandomElems(emotions)
     },
     {
       id: `42`,
       author: `Ilya O'Reilly`,
-      comment: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
-      date: `2019/12/31 23:59`,
+      text: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
+      date: `2020/${getRandomNumber(1, 12)}/${getRandomNumber(1, 28)} ${getRandomNumber(0, 23)}:${getRandomNumber(0, 59)}`,
       emotion: getRandomElems(emotions)
     },
     {
       id: `42`,
       author: `Ilya O'Reilly`,
-      comment: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
-      date: `2019/12/31 23:59`,
+      text: `a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.`,
+      date: `2020/${getRandomNumber(1, 12)}/${getRandomNumber(1, 28)} ${getRandomNumber(0, 23)}:${getRandomNumber(0, 59)}`,
       emotion: getRandomElems(emotions)
     },
   ];
@@ -81,9 +78,9 @@ const createFilmObject = function () {
     id: `0`,
     comments: getRandomElems(comments, [0, 5]),
     filmInfo: {
-      title: `A Little Pony Without The Carpet`,
-      alternativeTitle: `Original: ${`Laziness Who Sold Themselves`}`,
-      totalRating: 5.3,
+      title: filmTitle,
+      alternativeTitle: `Original: ${filmTitle}`,
+      totalRating: `${getRandomNumber(0, 9)}.${getRandomNumber(1, 9)}`,
       poster: `./images/posters/${getRandomElems(posters)}`,
       ageRating: `${0}+`,
       director: `Tom Ford`,
@@ -97,8 +94,8 @@ const createFilmObject = function () {
         `Morgan Freeman`
       ].join(`, `),
       release: {
-        date: `30 March 1945`,
-        year: `2019`,
+        date: `${getRandomNumber(1, 28)} ${getRandomElems(months)} ${filmYear}`,
+        year: filmYear,
         releaseCountry: `Finland`
       },
       runtime: `${Math.floor(filmDuration / 60)}h ${filmDuration % 60}m`,
@@ -118,7 +115,7 @@ const createFilmObject = function () {
   };
 };
 
-const createMocks = function (count) {
+const createMocks = (count) => {
   const result = [];
 
   for (let i = 0; i < count; i++) {
@@ -130,7 +127,7 @@ const createMocks = function (count) {
 
 const mocks = createMocks(20);
 
-const createFiltersObject = function () {
+const createFiltersObject = () => {
   let watchlist = 0; let history = 0; let favorites = 0;
 
   for (const mock of mocks) {
@@ -149,40 +146,83 @@ const createFiltersObject = function () {
 const filters = createFiltersObject();
 
 const header = document.querySelector(`.header`);
-renderComponent(header, getUserLevel());
+const userLevelComponent = new UserLevel();
+render(header, userLevelComponent.getElement(), RenderPosition.BEFOREEND);
 
 const mainContainer = document.querySelector(`.main`);
+const mainMenuComponent = new MainMenu(filters);
+const sortMenuComponent = new SortMenu();
+const filmContainerComponent = new FilmContainer();
 
-renderComponent(mainContainer, getMainMenu(filters));
-renderComponent(mainContainer, getSortMenu());
-renderComponent(mainContainer, getFilmContainer());
+render(mainContainer, mainMenuComponent.getElement(), RenderPosition.BEFOREEND);
+render(mainContainer, sortMenuComponent.getElement(), RenderPosition.BEFOREEND);
+render(mainContainer, filmContainerComponent.getElement(), RenderPosition.BEFOREEND);
 
-const filmsList = document.querySelector(`.films .films-list`);
 let filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
-
 let filmsShowed = 0;
+let renderedFilms = [];
+
+const findFilmObject = (films, filter, element) => {
+  return films.find((film) => {
+    return film[filter].getElement() === element;
+  });
+};
+
+const showPopup = (evt) => {
+  if ([`film-card__title`, `film-card__poster`, `film-card__comments`].indexOf(evt.target.classList[0]) !== -1) {
+    const currentPopup = findFilmObject(renderedFilms, `card`, evt.target.parentElement).popup.getElement();
+    document.body.appendChild(currentPopup);
+  }
+};
+
+const closePopup = () => {
+  const currentPopup = findFilmObject(renderedFilms, `popup`, document.querySelector(`.film-details`)).popup.getElement();
+  document.body.removeChild(currentPopup);
+};
+
+const onCardClick = (evt) => {
+  showPopup(evt);
+};
+
+const createFilm = (index) => {
+  renderedFilms.push(
+      {
+        card: new FilmCard(mocks[index]),
+        popup: new FilmPopup(mocks[index])
+      }
+  );
+
+  const currentCard = renderedFilms[index].card;
+  const currentPopup = renderedFilms[index].popup;
+
+  currentCard.getElement().addEventListener(`click`, onCardClick);
+  currentPopup.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closePopup);
+
+  render(filmsListContainer, currentCard.getElement(), RenderPosition.BEFOREEND);
+};
 
 for (filmsShowed; filmsShowed < 5; filmsShowed++) {
-  renderComponent(filmsListContainer, getFilmCard(mocks[filmsShowed]));
+  createFilm(filmsShowed);
 }
 
-renderComponent(filmsList, getShowMore());
+const filmsList = document.querySelector(`.films .films-list`);
+const showMoreComponent = new ShowMore();
+render(filmsList, showMoreComponent.getElement(), RenderPosition.BEFOREEND);
 
 const footerStatistic = document.querySelector(`.footer__statistics`);
+const filmsStatisticComponent = new FilmsStatistic(`130 291`);
+render(footerStatistic, filmsStatisticComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderComponent(footerStatistic, getFilmsStatistic(`130 291`));
-renderComponent(document.body, getFilmPopup(mocks[0]));
-
+// render(document.body, FilmPopupComponent.getElement(), RenderPosition.BEFOREEND);
 
 let filmsShowedLater = filmsShowed;
 
 filmsListContainer = document.querySelector(`.films .films-list .films-list__container`);
 const showMoreBtn = document.querySelector(`.films-list__show-more`);
 
-const showMore = function () {
-
+const showMore = () => {
   for (filmsShowed; filmsShowed < filmsShowedLater + 5 && filmsShowed < mocks.length; filmsShowed++) {
-    renderComponent(filmsListContainer, getFilmCard(mocks[filmsShowed]));
+    createFilm(filmsShowed);
   }
 
   filmsShowedLater = filmsShowed;

@@ -1,13 +1,11 @@
-import {getComment} from './comment.js';
+import {createElement} from "../utils";
 
-const getFilmPopup = function (film) {
-  let commentElements = ``;
+const createFilmPopupTemplate = function (film) {
+
+  const {filmInfo, comments} = film;
   let genreElements = ``;
-  for (const comment of film.comments) {
-    commentElements += getComment(comment);
-  }
 
-  for (const genre of film.filmInfo.genre) {
+  for (const genre of filmInfo.genre) {
     genreElements += `<span class="film-details__genre">${genre}</span>`;
   }
 
@@ -20,47 +18,47 @@ const getFilmPopup = function (film) {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${film.filmInfo.poster}" alt="">
+              <img class="film-details__poster-img" src="${filmInfo.poster}" alt="">
 
-              <p class="film-details__age">${film.filmInfo.ageRating}</p>
+              <p class="film-details__age">${filmInfo.ageRating}</p>
             </div>
 
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${film.filmInfo.title}</h3>
-                  <p class="film-details__title-original">${film.filmInfo.alternativeTitle}</p>
+                  <h3 class="film-details__title">${filmInfo.title}</h3>
+                  <p class="film-details__title-original">${filmInfo.alternativeTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${film.filmInfo.totalRating}</p>
+                  <p class="film-details__total-rating">${filmInfo.totalRating}</p>
                 </div>
               </div>
 
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${film.filmInfo.director}</td>
+                  <td class="film-details__cell">${filmInfo.director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${film.filmInfo.writers}</td>
+                  <td class="film-details__cell">${filmInfo.writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${film.filmInfo.actors}</td>
+                  <td class="film-details__cell">${filmInfo.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${film.filmInfo.release.date}</td>
+                  <td class="film-details__cell">${filmInfo.release.date}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${film.filmInfo.runtime}</td>
+                  <td class="film-details__cell">${filmInfo.runtime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${film.filmInfo.release.releaseCountry}</td>
+                  <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
@@ -70,7 +68,7 @@ const getFilmPopup = function (film) {
               </table>
 
               <p class="film-details__film-description">
-                ${film.filmInfo.description}
+                ${filmInfo.description}
               </p>
             </div>
           </div>
@@ -89,9 +87,9 @@ const getFilmPopup = function (film) {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
-            <ul class="film-details__comments-list">${commentElements}</ul>
+            <ul class="film-details__comments-list">были комменты</ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
@@ -131,4 +129,26 @@ const getFilmPopup = function (film) {
   `;
 };
 
-export {getFilmPopup};
+export default class FilmPopup {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
