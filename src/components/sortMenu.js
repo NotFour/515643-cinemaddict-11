@@ -1,4 +1,6 @@
-const getSortMenu = function () {
+import {createElement} from "../utils";
+
+const createSortMenuTemplate = () => {
   return `
     <ul class="sort">
       <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -8,4 +10,21 @@ const getSortMenu = function () {
   `;
 };
 
-export {getSortMenu};
+
+export default class SortMenu {
+  getTemplate() {
+    return createSortMenuTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

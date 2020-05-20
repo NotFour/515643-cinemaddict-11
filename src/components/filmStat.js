@@ -1,7 +1,32 @@
-const getFilmsStatistic = function (filmsCount) {
+import {createElement} from "../utils";
+
+const createFilmsStatisticTemplate = (count) => {
+
   return `
-    <p>${filmsCount} movies inside</p>
+    <p>${count} movies inside</p>
   `;
 };
 
-export {getFilmsStatistic};
+export default class FilmsStatistic {
+  constructor(count) {
+    this._count = count;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmsStatisticTemplate(this._count);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
