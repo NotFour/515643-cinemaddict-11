@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract";
 
 const createFilmsStatisticTemplate = (count) => {
 
@@ -7,26 +7,13 @@ const createFilmsStatisticTemplate = (count) => {
   `;
 };
 
-export default class FilmsStatistic {
+export default class FilmsStatistic extends AbstractComponent {
   constructor(count) {
+    super();
     this._count = count;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmsStatisticTemplate(this._count);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

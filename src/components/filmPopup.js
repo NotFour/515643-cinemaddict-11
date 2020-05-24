@@ -1,9 +1,12 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract";
+import {getTTimeFromMinutes} from "../utils/common";
 
 const createFilmPopupTemplate = function (film) {
 
   const {filmInfo, comments} = film;
   let genreElements = ``;
+
+  const duration = getTTimeFromMinutes(filmInfo.runtime);
 
   for (const genre of filmInfo.genre) {
     genreElements += `<span class="film-details__genre">${genre}</span>`;
@@ -54,7 +57,7 @@ const createFilmPopupTemplate = function (film) {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${filmInfo.runtime}</td>
+                  <td class="film-details__cell">${duration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
@@ -89,7 +92,7 @@ const createFilmPopupTemplate = function (film) {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
-            <ul class="film-details__comments-list">были комменты</ul>
+            <ul class="film-details__comments-list"></ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
@@ -129,26 +132,17 @@ const createFilmPopupTemplate = function (film) {
   `;
 };
 
-export default class FilmPopup {
+export default class FilmPopup extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmPopupTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

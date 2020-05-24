@@ -1,4 +1,6 @@
-import {createElement, getRandomNumber} from '../utils.js';
+import {getRandomNumber} from '../utils/common.js';
+import AbstractComponent from "./abstract";
+import {getTTimeFromMinutes} from "../utils/common";
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, comments, userDetails} = film;
@@ -7,6 +9,7 @@ const createFilmCardTemplate = (film) => {
   const watchedButtonInactiveClass = userDetails.alreadyWatched ? `film-card__controls-item--active` : ``;
   const favoriteButtonInactiveClass = userDetails.favorite ? `film-card__controls-item--active` : ``;
 
+  const duration = getTTimeFromMinutes(filmInfo.runtime);
   const filmGenre = filmInfo.genre[getRandomNumber(0, 2)];
 
   return `
@@ -15,7 +18,7 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__rating">${filmInfo.totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${filmInfo.release.year}</span>
-        <span class="film-card__duration">${filmInfo.runtime}</span>
+        <span class="film-card__duration">${duration}</span>
         <span class="film-card__genre">${filmGenre}</span>
       </p>
       <img src="${filmInfo.poster}" alt="" class="film-card__poster">
@@ -30,26 +33,17 @@ const createFilmCardTemplate = (film) => {
   `;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 }
