@@ -21,10 +21,6 @@ export const render = (container, component, place) => {
   }
 };
 
-export const replace = (parent, newElement, oldElement) => {
-  parent.replaceChild(newElement, oldElement);
-};
-
 export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();

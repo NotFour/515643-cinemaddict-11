@@ -73,7 +73,7 @@ const createFilmObject = () => {
     filmInfo: {
       title: filmTitle,
       alternativeTitle: `Original: ${filmTitle}`,
-      totalRating: `${getRandomNumber(0, 9)}.${getRandomNumber(1, 9)}`,
+      totalRating: getRandomNumber(1, 9),
       poster: `./images/posters/${getRandomElems(posters)}`,
       ageRating: `${0}+`,
       director: `Tom Ford`,
@@ -139,7 +139,7 @@ const createMocks = (count) => {
   return result;
 };
 
-let mocks = createMocks(20);
+let mocks = createMocks(10);
 
 const mainContainer = document.querySelector(`.main`);
 
